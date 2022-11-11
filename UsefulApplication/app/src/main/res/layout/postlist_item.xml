@@ -1,16 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- background -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/post_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_margin="15dp"
+    android:background="#F3F3F3"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <TextView
-        android:id="@+id/post_song_title"
-        style="@style/post_title" />
+    <!-- image -->
+    <ImageView
+        android:id="@+id/post_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="15sp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pexels_kaique_rocha_50859" />
 
+
+    <!-- LinearLayout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:orientation="horizontal">
+        <!-- date -->
+        <TextView
+            android:id="@+id/post_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10sp"
+            android:text="11/12/22" />
+        <!-- location -->
+        <TextView
+            android:id="@+id/post_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#26000000"
+            android:paddingLeft="10sp"
+            android:paddingTop="2sp"
+            android:paddingRight="10sp"
+            android:paddingBottom="2sp"
+            android:text="Birmingham" />
+    </LinearLayout>
+
+    <!-- caption -->
     <TextView
-        android:id="@+id/post_song_artist"
-        style="@style/post_title"/>
+        android:id="@+id/post_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:text="This is some text that can be used as a caption but it does not mean anything..." />
+
+    <!-- LinearLayout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10sp">
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/post_song_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="15sp"
+            android:src="@drawable/_50x250_000000_80_0_0" />
+
+        <!-- LinearLayout -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Song title -->
+            <TextView
+                android:id="@+id/post_song_title"
+                style="@style/post_title"
+                android:text="Some song title"
+                android:textSize="20sp" />
+            <!-- Song artist -->
+            <TextView
+                android:id="@+id/post_song_artist"
+                style="@style/post_title"
+                android:text="Some artist name"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 
 </LinearLayout>
