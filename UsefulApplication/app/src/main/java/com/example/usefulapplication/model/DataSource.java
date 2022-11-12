@@ -1,30 +1,71 @@
 package com.example.usefulapplication.model;
 
-import java.time.LocalDate;
+import android.content.Context;
+import android.util.Log;
+
+import androidx.room.Room;
+
+import com.example.usefulapplication.dao.UserPostDao;
+import com.example.usefulapplication.database.AppDatabase;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class DataSource {
 
-    private List<PostItem> data;
+    private List<UserPost> data;
+
+    AppDatabase appDatabase;
+    UserPostDao userPostDao;
 
     private static DataSource dataSource;
 
-    public DataSource() {
+    private DataSource(Context context) {
+        this.appDatabase = Room.databaseBuilder(context, AppDatabase.class, "app-database").fallbackToDestructiveMigration().build();
+        this.userPostDao = appDatabase.userPostDao();
         this.data = new ArrayList<>();
-        this.data.add(new PostItem(LocalDate.of(2022, 10, 10), "Birmingham", "Some caption", "Zombie", "Jamie T"));
-        this.data.add(new PostItem(LocalDate.of(2022, 10, 10), "Birmingham", "Some caption 2", "Zombie 2", "Jamie T 2"));
-        this.data.add(new PostItem(LocalDate.of(2022, 10, 10), "Birmingham", "Some caption 3", "Zombie 3", "Jamie T 3"));
-        this.data.add(new PostItem(LocalDate.of(2022, 10, 10), "Birmingham", "Some caption 4", "Zombie 4", "Jamie T 4"));
-        this.data.add(new PostItem(LocalDate.of(2022, 10, 10), "Birmingham", "Some caption 5", "Zombie 5", "Jamie T 5"));
+
+        prepopulateDatabase();
+
+        try {
+            this.data.addAll(userPostDao.getAll().get());
+            Log.i(this.getClass().getSimpleName(), "DataSource: "+ "data added");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.i(this.getClass().getSimpleName(), "DataSource: "+ data.size());
     }
 
-    public List<PostItem> getData() {
+    public List<UserPost> getData() {
         return data;
     }
 
-    public static DataSource getDataSource(){
-        return dataSource == null ? new DataSource() : dataSource;
+    public static DataSource getDataSource(Context context){
+        return dataSource == null ? new DataSource(context) : dataSource;
+    }
+
+    private void prepopulateDatabase(){
+        try {
+            userPostDao.deleteAll().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<UserPost> posts = new ArrayList<>();
+
+        posts.add(new UserPost("Birmingham", "This is a caption", "Some song title gg", "Song artist"));
+        posts.add(new UserPost("Birmingham", "This is a caption", "Some song title gg2", "Song artist 2"));
+
+        try{
+            userPostDao.insertUserPosts(posts);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

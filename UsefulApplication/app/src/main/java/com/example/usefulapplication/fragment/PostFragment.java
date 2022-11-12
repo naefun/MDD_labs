@@ -15,7 +15,7 @@ import com.example.usefulapplication.PostListAdapter;
 import com.example.usefulapplication.R;
 import com.example.usefulapplication.databinding.FragmentPostBinding;
 import com.example.usefulapplication.model.DataSource;
-import com.example.usefulapplication.model.PostItem;
+import com.example.usefulapplication.model.UserPost;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class PostFragment extends Fragment {
 
-    private final List<PostItem> posts;
+    private List<UserPost> posts;
     FragmentPostBinding binding;
     private RecyclerView recyclerView;
     private PostListAdapter adapter;
@@ -32,7 +32,6 @@ public class PostFragment extends Fragment {
     public PostFragment() {
         // Required empty public constructor
         super();
-        posts = DataSource.getDataSource().getData();
     }
 
     @Override
@@ -44,6 +43,7 @@ public class PostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        posts = DataSource.getDataSource(container.getContext()).getData();
         // Inflate the layout for this fragment
         binding = FragmentPostBinding.inflate(inflater, container, false);
         return binding.getRoot();

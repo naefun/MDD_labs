@@ -1,35 +1,53 @@
 package com.example.usefulapplication.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.time.LocalDate;
-import java.util.Date;
 
-public class PostItem {
 
-    private LocalDate date;
+@Entity
+public class UserPost {
+
+    @PrimaryKey(autoGenerate = true)
+    public Long uid;
+
+//    @ColumnInfo(name = "date")
+//    private LocalDate date;
+    @ColumnInfo(name = "location")
     private String location;
+    @ColumnInfo(name = "caption")
     private String caption;
+    @ColumnInfo(name = "song_title")
     private String songTitle;
+    @ColumnInfo(name = "song_artist")
     private String songArtist;
 
-    private int clickCount;
-
-    public PostItem(LocalDate date, String location, String caption, String songTitle, String songArtist) {
-        this.date = date;
+//    public UserPost(LocalDate date, String location, String caption, String songTitle, String songArtist) {
+//        this.date = date;
+//        this.location = location;
+//        this.caption = caption;
+//        this.songTitle = songTitle;
+//        this.songArtist = songArtist;
+//
+//        clickCount = 0;
+//    }
+//
+    public UserPost(String location, String caption, String songTitle, String songArtist) {
         this.location = location;
         this.caption = caption;
         this.songTitle = songTitle;
         this.songArtist = songArtist;
-
-        clickCount = 0;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+//    public LocalDate getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(LocalDate date) {
+//        this.date = date;
+//    }
 
     public String getLocation() {
         return location;
@@ -61,17 +79,5 @@ public class PostItem {
 
     public void setSongArtist(String songArtist) {
         this.songArtist = songArtist;
-    }
-
-    public void incrementClickCount(){
-        this.clickCount++;
-    }
-
-    public String simpleDisplay() {
-        String clickMsg = "";
-        if (clickCount > 0) {
-            clickMsg = ". Clicked: " + clickCount + " times";
-        }
-        return songTitle + " " + songArtist + clickMsg;
     }
 }

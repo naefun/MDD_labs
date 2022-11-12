@@ -9,15 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.usefulapplication.model.PostItem;
+import com.example.usefulapplication.model.UserPost;
 
 import java.util.List;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostViewHolder> {
-    private List<PostItem> posts;
+    private List<UserPost> posts;
     private LayoutInflater inflater;
 
-    public PostListAdapter(Context context, List<PostItem> posts) {
+    public PostListAdapter(Context context, List<UserPost> posts) {
         this.inflater = LayoutInflater.from(context);
         this.posts = posts;
     }
@@ -31,7 +31,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 
     @Override
     public void onBindViewHolder(@NonNull PostListAdapter.PostViewHolder holder, int position) {
-        PostItem post = posts.get(position);
+        UserPost post = posts.get(position);
         holder.postTitleView.setText(post.getSongTitle());
         holder.postArtistView.setText(post.getSongArtist());
     }
