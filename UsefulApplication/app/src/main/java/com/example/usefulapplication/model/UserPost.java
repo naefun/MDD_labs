@@ -23,22 +23,15 @@ public class UserPost {
     private String songTitle;
     @ColumnInfo(name = "song_artist")
     private String songArtist;
+    @ColumnInfo(name = "song_id")
+    private String songId;
 
-//    public UserPost(LocalDate date, String location, String caption, String songTitle, String songArtist) {
-//        this.date = date;
-//        this.location = location;
-//        this.caption = caption;
-//        this.songTitle = songTitle;
-//        this.songArtist = songArtist;
-//
-//        clickCount = 0;
-//    }
-//
-    public UserPost(String location, String caption, String songTitle, String songArtist) {
+    public UserPost(String location, String caption, String songTitle, String songArtist, String songId) {
         this.location = location;
         this.caption = caption;
         this.songTitle = songTitle;
         this.songArtist = songArtist;
+        this.songId = songId;
     }
 
 //    public LocalDate getDate() {
@@ -48,6 +41,19 @@ public class UserPost {
 //    public void setDate(LocalDate date) {
 //        this.date = date;
 //    }
+
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public String getSongId() {
+        return songId;
+    }
+
+    public void setSongId(String songId) {
+        this.songId = songId;
+    }
 
     public String getLocation() {
         return location;

@@ -53,8 +53,10 @@ public class PostFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerview);
-        adapter = new PostListAdapter(getContext(), posts);
+        adapter = new PostListAdapter(getContext(), posts, this.getViewLifecycleOwner());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
+
+
 }
