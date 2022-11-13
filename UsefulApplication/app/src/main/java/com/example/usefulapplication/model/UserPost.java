@@ -19,18 +19,12 @@ public class UserPost {
     private String location;
     @ColumnInfo(name = "caption")
     private String caption;
-    @ColumnInfo(name = "song_title")
-    private String songTitle;
-    @ColumnInfo(name = "song_artist")
-    private String songArtist;
     @ColumnInfo(name = "song_id")
     private String songId;
 
-    public UserPost(String location, String caption, String songTitle, String songArtist, String songId) {
+    public UserPost(String location, String caption, String songId) {
         this.location = location;
         this.caption = caption;
-        this.songTitle = songTitle;
-        this.songArtist = songArtist;
         this.songId = songId;
     }
 
@@ -69,21 +63,5 @@ public class UserPost {
 
     public void setCaption(String caption) {
         this.caption = caption;
-    }
-
-    public String getSongTitle() {
-        return songTitle;
-    }
-
-    public void setSongTitle(String songTitle) {
-        this.songTitle = songTitle;
-    }
-
-    public String getSongArtist() {
-        return songArtist;
-    }
-
-    public void setSongArtist(String songArtist) {
-        this.songArtist = songArtist;
     }
 }

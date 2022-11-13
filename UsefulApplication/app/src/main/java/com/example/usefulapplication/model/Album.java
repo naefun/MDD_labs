@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Album implements Serializable {
     private String title;
-    private String coverMedium;
+    private String cover_medium;
 
     public String getTitle() {
         return title;
@@ -14,11 +14,11 @@ public class Album implements Serializable {
         this.title = title;
     }
 
-    public String getCoverMedium() {
-        return coverMedium;
+    public String getCover_medium() {
+        return cover_medium;
     }
 
-    public void setCoverMedium(String coverMedium) {
-        this.coverMedium = coverMedium;
+    public void setCover_medium(String cover_medium) {
+        this.cover_medium = cover_medium;
     }
 }

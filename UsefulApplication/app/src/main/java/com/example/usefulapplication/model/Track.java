@@ -35,8 +35,9 @@ public class Track implements Serializable {
     public String toString() {
         return "Track{" +
                 "title='" + title + '\'' +
-                ", artist=" + artist +
-                ", album=" + album +
+                ", artist=" + artist.getName() +
+                ", album=" + album.getTitle() +
+                ", album cover=" + album.getCover_medium() +
                 '}';
     }
 }

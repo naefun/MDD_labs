@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.example.usefulapplication.model.Track;
 import com.example.usefulapplication.model.UserPost;
 import com.example.usefulapplication.service.DeezerController;
 import com.example.usefulapplication.service.TrackRepository;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -55,6 +57,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     @Override
     public void onBindViewHolder(@NonNull PostListAdapter.PostViewHolder holder, int position) {
         UserPost post = posts.get(position);
+
+//        holder.postDateView.setText(post.getDate());
+        holder.postLocationView.setText(post.getLocation());
+        holder.postCaptionView.setText(post.getCaption());
+
         MutableLiveData<Track> track = new MutableLiveData<>();
         requestTrack(post.getSongId(), track);
 
@@ -63,6 +70,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             public void onChanged(@Nullable Track track) {
                 holder.postTitleView.setText(track.getTitle());
                 holder.postArtistView.setText(track.getArtist().getName());
+                Log.i("NB", "onChanged: " + track.getAlbum().getCover_medium());
+                Picasso.get().load(track.getAlbum().getCover_medium()).into(holder.postTrackImageView);
             }
         };
         track.observe(lifecycleOwner, trackObserver);
@@ -94,14 +103,22 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {
+        public final TextView postDateView;
+        public final TextView postLocationView;
+        public final TextView postCaptionView;
+        public final ImageView postTrackImageView;
         public final TextView postTitleView;
         public final TextView postArtistView;
         final PostListAdapter adapter;
 
         public PostViewHolder(@NonNull View itemView, PostListAdapter adapter) {
             super(itemView);
+            this.postDateView = itemView.findViewById(R.id.post_date);
+            this.postLocationView = itemView.findViewById(R.id.post_location);
+            this.postCaptionView = itemView.findViewById(R.id.post_caption);
             this.postTitleView = itemView.findViewById(R.id.post_song_title);
             this.postArtistView = itemView.findViewById(R.id.post_song_artist);
+            this.postTrackImageView = itemView.findViewById(R.id.post_song_image);
             this.adapter = adapter;
         }
     }

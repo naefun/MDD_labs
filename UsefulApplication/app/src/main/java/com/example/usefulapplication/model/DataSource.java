@@ -58,8 +58,8 @@ public class DataSource {
 
         List<UserPost> posts = new ArrayList<>();
 
-        posts.add(new UserPost("Birmingham", "This is a caption", "Some song title gg", "Song artist", "85417912"));
-        posts.add(new UserPost("Birmingham", "This is a caption", "Some song title gg2", "Song artist 2", "668913922"));
+        posts.add(new UserPost("Birmingham", "This is a caption", "85417912"));
+        posts.add(new UserPost("Birmingham", "This is a caption", "668913922"));
 
         try{
             userPostDao.insertUserPosts(posts);
