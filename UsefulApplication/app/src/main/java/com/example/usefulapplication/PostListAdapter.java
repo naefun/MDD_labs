@@ -1,24 +1,34 @@
 package com.example.usefulapplication;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.fragment.FragmentNavigator;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.usefulapplication.fragment.PostFragment;
 import com.example.usefulapplication.model.Track;
 import com.example.usefulapplication.model.UserPost;
 import com.example.usefulapplication.service.DeezerController;
 import com.example.usefulapplication.service.TrackRepository;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -37,14 +47,16 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     DeezerController service;
     TrackRepository trackRepository;
     private LifecycleOwner lifecycleOwner;
+    private Fragment parentFragment;
 
-    public PostListAdapter(Context context, List<UserPost> posts, LifecycleOwner viewLifecycleOwner) {
+    public PostListAdapter(Context context, List<UserPost> posts, LifecycleOwner viewLifecycleOwner, Fragment fragment) {
         this.inflater = LayoutInflater.from(context);
         this.posts = posts;
         this.retrofit = new Retrofit.Builder().baseUrl("https://deezerdevs-deezer.p.rapidapi.com").addConverterFactory(GsonConverterFactory.create()).build();
         this.service = retrofit.create(DeezerController.class);
         this.trackRepository = new TrackRepository(service);
         this.lifecycleOwner = viewLifecycleOwner;
+        this.parentFragment = fragment;
     }
 
     @NonNull
@@ -61,6 +73,29 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 //        holder.postDateView.setText(post.getDate());
         holder.postLocationView.setText(post.getLocation());
         holder.postCaptionView.setText(post.getCaption());
+
+        holder.postMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("NB", "onClick: Post menu button clicked");
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.post_popup_menu, popupMenu.getMenu());
+                popupMenu.getMenu().findItem(R.id.menu_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        Log.i("NB", "onMenuItemClick: " + menuItem.getTitle());
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("postId", post.getUid());
+                        bundle.putString("trackId", post.getSongId());
+                        bundle.putString("caption", post.getCaption());
+                        bundle.putString("location", post.getLocation());
+                        NavHostFragment.findNavController(parentFragment).navigate(R.id.action_postFragment_to_editPost, bundle);
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
 
         MutableLiveData<Track> track = new MutableLiveData<>();
         requestTrack(post.getSongId(), track);
@@ -120,6 +155,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         public final ImageView postTrackImageView;
         public final TextView postTitleView;
         public final TextView postArtistView;
+        public final Button postMenuButton;
         final PostListAdapter adapter;
 
         public PostViewHolder(@NonNull View itemView, PostListAdapter adapter) {
@@ -130,6 +166,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             this.postTitleView = itemView.findViewById(R.id.post_song_title);
             this.postArtistView = itemView.findViewById(R.id.post_song_artist);
             this.postTrackImageView = itemView.findViewById(R.id.post_song_image);
+            this.postMenuButton = itemView.findViewById(R.id.post_menu_button);
             this.adapter = adapter;
         }
     }

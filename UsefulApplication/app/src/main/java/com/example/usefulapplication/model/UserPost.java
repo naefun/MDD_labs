@@ -2,6 +2,7 @@ package com.example.usefulapplication.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 
@@ -26,7 +27,15 @@ public class UserPost {
         this.songId = songId;
     }
 
-//    public LocalDate getDate() {
+    @Ignore
+    public UserPost(String location, String caption, String songId, Long uid) {
+        this.uid = uid;
+        this.location = location;
+        this.caption = caption;
+        this.songId = songId;
+    }
+
+    //    public LocalDate getDate() {
 //        return date;
 //    }
 //

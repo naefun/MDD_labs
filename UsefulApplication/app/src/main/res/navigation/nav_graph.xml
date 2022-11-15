@@ -12,10 +12,18 @@
         <action
             android:id="@+id/action_postFragment_to_createPostFragment"
             app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_postFragment_to_editPost"
+            app:destination="@id/editPost" />
     </fragment>
     <fragment
         android:id="@+id/createPostFragment"
         android:name="com.example.usefulapplication.fragment.CreatePostFragment"
         android:label="fragment_create_post"
         tools:layout="@layout/fragment_create_post" />
+    <fragment
+        android:id="@+id/editPost"
+        android:name="com.example.usefulapplication.fragment.EditPost"
+        android:label="fragment_edit_post"
+        tools:layout="@layout/fragment_edit_post" />
 </navigation>
