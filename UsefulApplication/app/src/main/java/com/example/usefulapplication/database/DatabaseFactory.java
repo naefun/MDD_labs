@@ -8,17 +8,10 @@ public class DatabaseFactory {
 
     private static AppDatabase database;
 
-    public static void createAppDatabase(Context context){
+    public static AppDatabase getAppDatabase(Context context){
         if(database == null){
-            database = Room.databaseBuilder(context, AppDatabase.class, "app-database").build();
+            database = Room.databaseBuilder(context, AppDatabase.class, "app-database").fallbackToDestructiveMigration().build();
         }
-    }
-
-    public static AppDatabase getAppDatabase() throws NullPointerException{
-        if(database == null){
-            throw new NullPointerException("Database has not been initialised");
-        }else{
-            return database;
-        }
+        return database;
     }
 }

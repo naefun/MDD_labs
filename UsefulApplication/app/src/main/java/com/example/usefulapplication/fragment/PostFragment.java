@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +17,7 @@ import com.example.usefulapplication.R;
 import com.example.usefulapplication.databinding.FragmentPostBinding;
 import com.example.usefulapplication.model.DataSource;
 import com.example.usefulapplication.model.UserPost;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -37,12 +39,13 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         posts = DataSource.getDataSource(container.getContext()).getData();
         // Inflate the layout for this fragment
         binding = FragmentPostBinding.inflate(inflater, container, false);
@@ -56,6 +59,14 @@ public class PostFragment extends Fragment {
         adapter = new PostListAdapter(getContext(), posts, this.getViewLifecycleOwner());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        FloatingActionButton fab = view.findViewById(R.id.addPostFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(PostFragment.this).navigate(R.id.action_postFragment_to_createPostFragment);
+            }
+        });
     }
 
 

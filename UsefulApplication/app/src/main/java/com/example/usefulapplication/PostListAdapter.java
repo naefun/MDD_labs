@@ -68,10 +68,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         final Observer<Track> trackObserver = new Observer<Track>() {
             @Override
             public void onChanged(@Nullable Track track) {
-                holder.postTitleView.setText(track.getTitle());
-                holder.postArtistView.setText(track.getArtist().getName());
-                Log.i("NB", "onChanged: " + track.getAlbum().getCover_medium());
-                Picasso.get().load(track.getAlbum().getCover_medium()).into(holder.postTrackImageView);
+                try{
+                    holder.postTitleView.setText(track.getTitle());
+                    holder.postArtistView.setText(track.getArtist().getName());
+                    Log.i("NB", "onChanged: " + track.getAlbum().getCover_medium());
+                    Picasso.get().load(track.getAlbum().getCover_medium()).into(holder.postTrackImageView);
+                    holder.postTrackImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         };
         track.observe(lifecycleOwner, trackObserver);
@@ -83,23 +93,24 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     }
 
     public void requestTrack(String trackId, MutableLiveData<Track> track) {
-        Call<Track> trackCall = trackRepository.getTrack(trackId);
-        trackCall.enqueue(new Callback<Track>() {
-            @Override
-            public void onResponse(Call<Track> call, Response<Track> response) {
-                if (response.isSuccessful()) {
-                    Log.i(this.getClass().getSimpleName(), response.body().toString());
-                    track.setValue(response.body());
+        if(track.getValue() == null){
+            Call<Track> trackCall = trackRepository.getTrack(trackId);
+            trackCall.enqueue(new Callback<Track>() {
+                @Override
+                public void onResponse(Call<Track> call, Response<Track> response) {
+                    if (response.isSuccessful()) {
+//                    Log.i(this.getClass().getSimpleName(), response.body().);
+                        track.setValue(response.body());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Track> call, Throwable t) {
-                // show error message to user
-                Log.i(this.getClass().getSimpleName(), "Error: " + t.toString());
-            }
-        });
-
+                @Override
+                public void onFailure(Call<Track> call, Throwable t) {
+                    // show error message to user
+                    Log.i(this.getClass().getSimpleName(), "Error: " + t.toString());
+                }
+            });
+        }
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {

@@ -3,10 +3,9 @@ package com.example.usefulapplication.model;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.room.Room;
-
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
+import com.example.usefulapplication.database.DatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class DataSource {
     private static DataSource dataSource;
 
     private DataSource(Context context) {
-        this.appDatabase = Room.databaseBuilder(context, AppDatabase.class, "app-database").fallbackToDestructiveMigration().build();
+        this.appDatabase = DatabaseFactory.getAppDatabase(context);
         this.userPostDao = appDatabase.userPostDao();
         this.data = new ArrayList<>();
 
@@ -66,6 +65,5 @@ public class DataSource {
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
 }
