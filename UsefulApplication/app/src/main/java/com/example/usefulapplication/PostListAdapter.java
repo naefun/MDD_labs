@@ -23,6 +23,9 @@ import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.usefulapplication.dao.UserPostDao;
+import com.example.usefulapplication.database.AppDatabase;
+import com.example.usefulapplication.database.DatabaseFactory;
 import com.example.usefulapplication.fragment.PostFragment;
 import com.example.usefulapplication.model.Track;
 import com.example.usefulapplication.model.UserPost;
@@ -93,6 +96,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         return true;
                     }
                 });
+
+                popupMenu.getMenu().findItem(R.id.menu_delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        AppDatabase appDatabase = DatabaseFactory.getAppDatabase(view.getContext());
+                        UserPostDao userPostDao = appDatabase.userPostDao();
+                        userPostDao.deletePost(post);
+                        posts.remove(holder.getAdapterPosition());
+                        notifyItemRemoved(holder.getAdapterPosition());
+                        notifyItemRangeChanged(holder.getAdapterPosition(), posts.size());
+                        return true;
+                    }
+                });
+
                 popupMenu.show();
             }
         });
