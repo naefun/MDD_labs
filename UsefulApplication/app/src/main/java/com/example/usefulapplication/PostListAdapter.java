@@ -1,6 +1,8 @@
 package com.example.usefulapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -100,12 +102,30 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 popupMenu.getMenu().findItem(R.id.menu_delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        AppDatabase appDatabase = DatabaseFactory.getAppDatabase(view.getContext());
-                        UserPostDao userPostDao = appDatabase.userPostDao();
-                        userPostDao.deletePost(post);
-                        posts.remove(holder.getAdapterPosition());
-                        notifyItemRemoved(holder.getAdapterPosition());
-                        notifyItemRangeChanged(holder.getAdapterPosition(), posts.size());
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                        alertDialogBuilder.setCancelable(true);
+                        alertDialogBuilder.setTitle("Alert");
+                        alertDialogBuilder.setMessage("Are you sure you want to delete the post?");
+                        alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                AppDatabase appDatabase = DatabaseFactory.getAppDatabase(view.getContext());
+                                UserPostDao userPostDao = appDatabase.userPostDao();
+                                userPostDao.deletePost(post);
+                                posts.remove(holder.getAdapterPosition());
+                                notifyItemRemoved(holder.getAdapterPosition());
+                                notifyItemRangeChanged(holder.getAdapterPosition(), posts.size());
+                            }
+                        });
+                        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+
+                        AlertDialog dialog = alertDialogBuilder.create();
+                        dialog.show();
                         return true;
                     }
                 });
