@@ -12,8 +12,8 @@ public class UserPost {
     @PrimaryKey(autoGenerate = true)
     public Long uid;
 
-//    @ColumnInfo(name = "date")
-//    private LocalDate date;
+    @ColumnInfo(name = "date")
+    private String date;
     @ColumnInfo(name = "location")
     private String location;
     @ColumnInfo(name = "caption")
@@ -21,28 +21,29 @@ public class UserPost {
     @ColumnInfo(name = "song_id")
     private String songId;
 
-    public UserPost(String location, String caption, String songId) {
+    public UserPost(String location, String caption, String songId, String date) {
         this.location = location;
         this.caption = caption;
         this.songId = songId;
+        this.date = date;
     }
 
     @Ignore
-    public UserPost(String location, String caption, String songId, Long uid) {
+    public UserPost(String location, String caption, String songId, String date, Long uid) {
         this.uid = uid;
         this.location = location;
         this.caption = caption;
         this.songId = songId;
+        this.date = date;
     }
 
-    //    public LocalDate getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(LocalDate date) {
-//        this.date = date;
-//    }
+    public String getDate() {
+        return date;
+    }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public Long getUid() {
         return uid;

@@ -1,20 +1,21 @@
 package com.example.usefulapplication.fragment;
 
+import static com.example.usefulapplication.helper.InputValidation.dateIsValid;
+import static com.example.usefulapplication.helper.InputValidation.inputIsEmpty;
+
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.usefulapplication.R;
 import com.example.usefulapplication.dao.UserPostDao;
@@ -54,14 +55,22 @@ public class CreatePostFragment extends Fragment {
             public void onClick(View view) {
                 String locationText = locationEditText.getText().toString();
                 String captionText = captionEditText.getText().toString();
+                String dateText = dateEditText.getText().toString();
                 String songIdText = "1109737";
 
-                if(inputIsEmpty(locationText, captionText, songIdText)){
-                    Toast.makeText(view.getContext(), "Please make sure all fields are filled in.", Toast.LENGTH_SHORT).show();
+                String toastMessage = "";
+                if(inputIsEmpty(locationText, captionText, songIdText, dateText)){
+                    toastMessage += "Please make sure all fields are filled in.";
+                }
+                if(toastMessage.length() == 0 && !dateIsValid(dateText)){
+                    toastMessage += "Please make sure the date is in the correct format. (dd/mm/yyyy)";
+                }
+                if(toastMessage.length() > 0){
+                    Toast.makeText(view.getContext(), toastMessage, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                UserPost post = new UserPost(locationText, captionText, songIdText);
+                UserPost post = new UserPost(locationText, captionText, songIdText, dateText);
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
                         + ", " + captionEditText.getText().toString()
@@ -81,13 +90,5 @@ public class CreatePostFragment extends Fragment {
         userPostDao.insertUserPost(post);
     }
 
-    private boolean inputIsEmpty(String...input){
-        for (String text: input) {
-            if (text.trim().length() == 0){
-                return true;
-            }
-        }
 
-        return false;
-    }
 }

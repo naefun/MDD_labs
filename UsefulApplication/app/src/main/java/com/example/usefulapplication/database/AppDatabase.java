@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.model.UserPost;
 
-@Database(entities = {UserPost.class}, version = 5)
+@Database(entities = {UserPost.class}, version = 6)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserPostDao userPostDao();
 }

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +20,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
 import com.example.usefulapplication.database.DatabaseFactory;
-import com.example.usefulapplication.fragment.PostFragment;
 import com.example.usefulapplication.model.Track;
 import com.example.usefulapplication.model.UserPost;
 import com.example.usefulapplication.service.DeezerController;
 import com.example.usefulapplication.service.TrackRepository;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -78,6 +74,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 //        holder.postDateView.setText(post.getDate());
         holder.postLocationView.setText(post.getLocation());
         holder.postCaptionView.setText(post.getCaption());
+        holder.postDateView.setText(post.getDate());
+
 
         holder.postMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +92,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         bundle.putString("trackId", post.getSongId());
                         bundle.putString("caption", post.getCaption());
                         bundle.putString("location", post.getLocation());
+                        bundle.putString("date", post.getDate());
                         NavHostFragment.findNavController(parentFragment).navigate(R.id.action_postFragment_to_editPost, bundle);
                         return true;
                     }
@@ -145,12 +144,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                     holder.postArtistView.setText(track.getArtist().getName());
                     Log.i("NB", "onChanged: " + track.getAlbum().getCover_medium());
                     Picasso.get().load(track.getAlbum().getCover_medium()).into(holder.postTrackImageView);
-                    holder.postTrackImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
                 }catch(Exception e){
                     e.printStackTrace();
                 }

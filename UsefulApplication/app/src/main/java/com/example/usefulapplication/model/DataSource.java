@@ -25,8 +25,6 @@ public class DataSource {
         this.userPostDao = appDatabase.userPostDao();
         this.data = new ArrayList<>();
 
-        //prepopulateDatabase();
-
         try {
             this.data.addAll(userPostDao.getAll().get());
             Log.i(this.getClass().getSimpleName(), "DataSource: "+ "data added");
@@ -44,26 +42,5 @@ public class DataSource {
 
     public static DataSource getDataSource(Context context){
         return dataSource == null ? new DataSource(context) : dataSource;
-    }
-
-    private void prepopulateDatabase(){
-        try {
-            userPostDao.deleteAll().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        List<UserPost> posts = new ArrayList<>();
-
-        posts.add(new UserPost("Birmingham", "This is a caption", "85417912"));
-        posts.add(new UserPost("Birmingham", "This is a caption", "668913922"));
-
-        try{
-            userPostDao.insertUserPosts(posts);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
 }

@@ -1,18 +1,21 @@
 package com.example.usefulapplication.fragment;
 
+import static com.example.usefulapplication.helper.InputValidation.dateIsValid;
+import static com.example.usefulapplication.helper.InputValidation.inputIsEmpty;
+
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.usefulapplication.R;
 import com.example.usefulapplication.dao.UserPostDao;
@@ -22,44 +25,25 @@ import com.example.usefulapplication.model.UserPost;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EditPost#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class EditPost extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_POST_ID = "postId";
     private static final String ARG_TRACK_ID = "trackId";
     private static final String ARG_CAPTION = "caption";
     private static final String ARG_LOCATION = "location";
+    private static final String ARG_DATE = "date";
 
-    // TODO: Rename and change types of parameters
     private Long postId;
     private String trackId;
     private String caption;
     private String location;
+    private String date;
 
     public EditPost() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditPost.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EditPost newInstance(String param1, String param2) {
-        EditPost fragment = new EditPost();
-        Bundle args = new Bundle();
-        args.putString(ARG_POST_ID, param1);
-        args.putString(ARG_TRACK_ID, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -70,6 +54,7 @@ public class EditPost extends Fragment {
             trackId = getArguments().getString(ARG_TRACK_ID);
             caption = getArguments().getString(ARG_CAPTION);
             location = getArguments().getString(ARG_LOCATION);
+            date = getArguments().getString(ARG_DATE);
         }
     }
 
@@ -82,7 +67,7 @@ public class EditPost extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.i("NB", "onViewCreated: " + postId + ", " + trackId + ", " + caption + ", " + location);
+        Log.i("NB", "onViewCreated: " + postId + ", " + trackId + ", " + caption + ", " + location + ", " + date);
         // set text for editText views
 
         TextView captionTextView = view.findViewById(R.id.edit_editTextCaption);
@@ -92,7 +77,7 @@ public class EditPost extends Fragment {
 
         captionTextView.setText(caption);
         locationTextView.setText(location);
-        dateTextView.setText("01/01/2001");
+        dateTextView.setText(date);
 
         updatePostButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +85,22 @@ public class EditPost extends Fragment {
                 String captionText = captionTextView.getText().toString();
                 String locationText = locationTextView.getText().toString();
                 String dateText = dateTextView.getText().toString();
-                UserPost post = new UserPost(locationText, captionText, trackId, postId);
+
+                String toastMessage = "";
+                if(inputIsEmpty(locationText, captionText, dateText)){
+                    toastMessage += "Please make sure all fields are filled in.";
+                }
+                if(toastMessage.length() == 0 && !dateIsValid(dateText)){
+                    toastMessage += "Please make sure the date is in the correct format. (dd/mm/yyyy)";
+                }
+                if(toastMessage.length() > 0){
+                    Toast.makeText(view.getContext(), toastMessage, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                UserPost post = new UserPost(locationText, captionText, trackId, dateText,  postId);
                 updatePost(view.getContext(), post);
+                Toast.makeText(view.getContext(), "Post successfully updated", Toast.LENGTH_SHORT).show();
             }
         });
         super.onViewCreated(view, savedInstanceState);
