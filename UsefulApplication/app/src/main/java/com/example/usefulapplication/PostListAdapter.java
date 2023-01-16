@@ -71,7 +71,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     public void onBindViewHolder(@NonNull PostListAdapter.PostViewHolder holder, int position) {
         UserPost post = posts.get(position);
 
-//        holder.postDateView.setText(post.getDate());
         holder.postLocationView.setText(post.getLocation());
         holder.postCaptionView.setText(post.getCaption());
         holder.postDateView.setText(post.getDate());
@@ -133,6 +132,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             }
         });
 
+        holder.postLocationView.setOnClickListener(view -> {
+            Log.i("Location button", "onBindViewHolder: location button has been pressed: " + holder.postLocationView.getText().toString());
+
+        });
+
         MutableLiveData<Track> track = new MutableLiveData<>();
         requestTrack(post.getSongId(), track);
 
@@ -180,7 +184,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 
     class PostViewHolder extends RecyclerView.ViewHolder {
         public final TextView postDateView;
-        public final TextView postLocationView;
+        public final Button postLocationView;
         public final TextView postCaptionView;
         public final ImageView postTrackImageView;
         public final TextView postTitleView;

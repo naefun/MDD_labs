@@ -55,15 +55,20 @@
             android:layout_marginRight="10sp"
             android:text="11/12/22" />
         <!-- location -->
-        <TextView
+        <Button
             android:id="@+id/post_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#26000000"
-            android:paddingLeft="10sp"
-            android:paddingTop="2sp"
-            android:paddingRight="10sp"
-            android:paddingBottom="2sp"
+            android:layout_marginLeft="10dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:includeFontPadding="false"
+            android:gravity="center"
+
             android:text="Birmingham" />
     </LinearLayout>
 
