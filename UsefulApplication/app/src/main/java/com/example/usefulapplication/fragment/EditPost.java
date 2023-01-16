@@ -73,10 +73,12 @@ public class EditPost extends Fragment {
         TextView captionTextView = view.findViewById(R.id.edit_editTextCaption);
         TextView locationTextView = view.findViewById(R.id.edit_editTextLocation);
         TextView dateTextView = view.findViewById(R.id.edit_editTextDate);
+        TextView trackIdTextView = view.findViewById(R.id.edit_editTrackId);
         Button updatePostButton = view.findViewById(R.id.update_post_button);
 
         captionTextView.setText(caption);
         locationTextView.setText(location);
+        trackIdTextView.setText(trackId);
         dateTextView.setText(date);
 
         updatePostButton.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +86,11 @@ public class EditPost extends Fragment {
             public void onClick(View view) {
                 String captionText = captionTextView.getText().toString();
                 String locationText = locationTextView.getText().toString();
+                String trackText = trackIdTextView.getText().toString();
                 String dateText = dateTextView.getText().toString();
 
                 String toastMessage = "";
-                if(inputIsEmpty(locationText, captionText, dateText)){
+                if(inputIsEmpty(locationText, captionText, trackText, dateText)){
                     toastMessage += "Please make sure all fields are filled in.";
                 }
                 if(toastMessage.length() == 0 && !dateIsValid(dateText)){
@@ -98,7 +101,7 @@ public class EditPost extends Fragment {
                     return;
                 }
 
-                UserPost post = new UserPost(locationText, captionText, trackId, dateText,  postId);
+                UserPost post = new UserPost(locationText, captionText, trackText, dateText,  postId);
                 updatePost(view.getContext(), post);
                 Toast.makeText(view.getContext(), "Post successfully updated", Toast.LENGTH_SHORT).show();
             }

@@ -56,6 +56,18 @@
             android:inputType="date"
             android:hint="21/10/2022"
             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Track id"/>
+        <EditText
+            android:id="@+id/editTextTrackId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="908604612"
+            />
     </LinearLayout>
 
 

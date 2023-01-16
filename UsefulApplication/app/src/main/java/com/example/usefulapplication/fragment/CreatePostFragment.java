@@ -48,6 +48,7 @@ public class CreatePostFragment extends Fragment {
         EditText captionEditText = view.findViewById(R.id.editTextCaption);
         EditText locationEditText = view.findViewById(R.id.editTextLocation);
         EditText dateEditText = view.findViewById(R.id.editTextDate);
+        EditText trackIdEditText = view.findViewById(R.id.editTextTrackId);
 
         Button createPostButton = view.findViewById(R.id.create_post_button);
         createPostButton.setOnClickListener(new View.OnClickListener() {
@@ -56,10 +57,10 @@ public class CreatePostFragment extends Fragment {
                 String locationText = locationEditText.getText().toString();
                 String captionText = captionEditText.getText().toString();
                 String dateText = dateEditText.getText().toString();
-                String songIdText = "1109737";
+                String trackIdText = trackIdEditText.getText().toString();
 
                 String toastMessage = "";
-                if(inputIsEmpty(locationText, captionText, songIdText, dateText)){
+                if(inputIsEmpty(locationText, captionText, trackIdText, dateText)){
                     toastMessage += "Please make sure all fields are filled in.";
                 }
                 if(toastMessage.length() == 0 && !dateIsValid(dateText)){
@@ -70,12 +71,13 @@ public class CreatePostFragment extends Fragment {
                     return;
                 }
 
-                UserPost post = new UserPost(locationText, captionText, songIdText, dateText);
+                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText);
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
-                        + ", " + captionEditText.getText().toString()
-                        + ", " + locationEditText.getText().toString()
-                        + ", " + dateEditText.getText().toString()
+                        + ", " + captionText
+                        + ", " + locationText
+                        + ", " + dateText
+                        + ", " + trackIdText
                 );
                 Toast.makeText(view.getContext(), "post created", Toast.LENGTH_SHORT).show();
             }
