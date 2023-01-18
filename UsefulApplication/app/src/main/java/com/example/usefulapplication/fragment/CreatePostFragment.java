@@ -113,11 +113,13 @@ public class CreatePostFragment extends Fragment {
 
                 //TODO
                 // add lat and long to user post
-                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText);
+                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText);
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
                         + ", " + captionText
                         + ", " + locationText
+                        + ", " + locationLatText
+                        + ", " + locationLongText
                         + ", " + dateText
                         + ", " + trackIdText
                 );
@@ -129,7 +131,7 @@ public class CreatePostFragment extends Fragment {
             Log.i("selectLocationButton", "onViewCreated: Select location button pressed");
 
             if(locationPermissionsSet(this.getContext())){
-                navigateToMapFragment();
+                navigateToSelectMapLocationFragment();
             }else{
                 Log.i("selectLocationButton", "onViewCreated: permissions not set");
                 requestPermissions();
@@ -137,7 +139,7 @@ public class CreatePostFragment extends Fragment {
         });
     }
 
-    private void navigateToMapFragment() {
+    private void navigateToSelectMapLocationFragment() {
         Bundle bundle = new Bundle();
         bundle.putString("caption", captionEditText.getText().toString());
         bundle.putString("location", locationTextView.getText().toString());
@@ -171,7 +173,7 @@ public class CreatePostFragment extends Fragment {
         if(requestCode == 1){
             if(grantResults.length == 1){
                 Log.i("requesting permissions", "onRequestPermissionsResult: permissions granted");
-                navigateToMapFragment();
+                navigateToSelectMapLocationFragment();
             }
         }
     }

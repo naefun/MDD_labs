@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_postFragment_to_editPost"
             app:destination="@id/editPost" />
+        <action
+            android:id="@+id/action_postFragment_to_viewLocationMapFragment"
+            app:destination="@id/viewLocationMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/createPostFragment"
@@ -85,5 +88,21 @@
             android:name="locationLong"
             app:argType="string"
             app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewLocationMapFragment"
+        android:name="com.example.usefulapplication.fragment.ViewLocationMap"
+        android:label="fragment_view_location"
+        tools:layout="@layout/fragment_view_location_map" >
+
+        <action
+            android:id="@+id/action_viewLocationMapFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+        <argument
+            android:name="locationLat"
+            app:argType="string" />
+        <argument
+            android:name="locationlong"
+            app:argType="string" />
     </fragment>
 </navigation>

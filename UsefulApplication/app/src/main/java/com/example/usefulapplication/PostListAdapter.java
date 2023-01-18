@@ -1,8 +1,11 @@
 package com.example.usefulapplication;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
@@ -26,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
 import com.example.usefulapplication.database.DatabaseFactory;
+import com.example.usefulapplication.fragment.CreatePostFragment;
 import com.example.usefulapplication.model.Track;
 import com.example.usefulapplication.model.UserPost;
 import com.example.usefulapplication.service.DeezerController;
@@ -49,6 +54,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     TrackRepository trackRepository;
     private LifecycleOwner lifecycleOwner;
     private Fragment parentFragment;
+    private Context context;
 
     public PostListAdapter(Context context, List<UserPost> posts, LifecycleOwner viewLifecycleOwner, Fragment fragment) {
         this.inflater = LayoutInflater.from(context);
@@ -58,6 +64,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         this.trackRepository = new TrackRepository(service);
         this.lifecycleOwner = viewLifecycleOwner;
         this.parentFragment = fragment;
+        this.context = context;
     }
 
     @NonNull
@@ -133,8 +140,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         });
 
         holder.postLocationView.setOnClickListener(view -> {
-            Log.i("Location button", "onBindViewHolder: location button has been pressed: " + holder.postLocationView.getText().toString());
-
+            ViewMapHandler viewMapHandler = new ViewMapHandler(post.getLocationLatitude(), post.getLocationLongitude(), this.parentFragment.getActivity());
+            viewMapHandler.handle();
         });
 
         MutableLiveData<Track> track = new MutableLiveData<>();
@@ -202,6 +209,54 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             this.postTrackImageView = itemView.findViewById(R.id.post_song_image);
             this.postMenuButton = itemView.findViewById(R.id.post_menu_button);
             this.adapter = adapter;
+        }
+    }
+
+    class ViewMapHandler extends Fragment {
+        private String latitude;
+        private String longitude;
+        private Activity mainActivity;
+        public ViewMapHandler(String latitude, String longitude, Activity mainActivity){
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.mainActivity = mainActivity;
+        }
+
+        public void handle() {
+            if(locationPermissionsSet(context)){
+                navigateToSelectMapLocationFragment(latitude, longitude);
+            }else{
+                Log.i("selectLocationButton", "onViewCreated: permissions not set");
+                requestPermissions();
+            }
+        }
+
+        private boolean locationPermissionsSet(Context context){
+            return ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        private void requestPermissions(){
+            Activity main = (MainActivity) mainActivity;
+            String[] permissions = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(main, permissions, 1);
+        }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            if(requestCode == 1){
+                if(grantResults.length == 1){
+                    Log.i("requesting permissions", "onRequestPermissionsResult: permissions granted");
+                    navigateToSelectMapLocationFragment(latitude, longitude);
+                }
+            }
+        }
+
+        private void navigateToSelectMapLocationFragment(String latitude, String longitude) {
+            Bundle bundle = new Bundle();
+            bundle.putString("locationLat", latitude);
+            bundle.putString("locationLong", longitude);
+            NavHostFragment.findNavController(parentFragment).navigate(R.id.action_postFragment_to_viewLocationMapFragment, bundle);
         }
     }
 }

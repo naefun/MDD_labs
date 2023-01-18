@@ -16,13 +16,19 @@ public class UserPost {
     private String date;
     @ColumnInfo(name = "location")
     private String location;
+    @ColumnInfo(name = "location_latitude")
+    private String locationLatitude;
+    @ColumnInfo(name = "location_longitude")
+    private String locationLongitude;
     @ColumnInfo(name = "caption")
     private String caption;
     @ColumnInfo(name = "song_id")
     private String songId;
 
-    public UserPost(String location, String caption, String songId, String date) {
+    public UserPost(String location, String caption, String songId, String date, String locationLatitude, String locationLongitude) {
         this.location = location;
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
         this.caption = caption;
         this.songId = songId;
         this.date = date;
@@ -35,6 +41,14 @@ public class UserPost {
         this.caption = caption;
         this.songId = songId;
         this.date = date;
+    }
+
+    public String getLocationLatitude() {
+        return locationLatitude;
+    }
+
+    public String getLocationLongitude() {
+        return locationLongitude;
     }
 
     public String getDate() {
