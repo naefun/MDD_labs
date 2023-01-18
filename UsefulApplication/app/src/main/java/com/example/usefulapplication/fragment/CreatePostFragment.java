@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -30,16 +30,19 @@ import com.example.usefulapplication.database.AppDatabase;
 import com.example.usefulapplication.database.DatabaseFactory;
 import com.example.usefulapplication.model.UserPost;
 
-import java.security.Permission;
-
 
 public class CreatePostFragment extends Fragment {
     private String captionArgument;
     private String locationArgument;
+    private String locationLatArgument;
+    private String locationLongArgument;
     private String dateArgument;
     private String trackIdArgument;
+
     private EditText captionEditText;
-    private EditText locationEditText;
+    private TextView locationTextView;
+    private TextView locationLatTextView;
+    private TextView locationLongTextView;
     private EditText dateEditText;
     private EditText trackIdEditText;
 
@@ -59,6 +62,8 @@ public class CreatePostFragment extends Fragment {
         Log.i("test bundle", "onViewCreated: location = " + getArguments().getString("location"));
         captionArgument = getArguments().getString("caption");
         locationArgument = getArguments().getString("location");
+        locationLatArgument = getArguments().getString("locationLat");
+        locationLongArgument = getArguments().getString("locationLong");
         dateArgument = getArguments().getString("date");
         trackIdArgument = getArguments().getString("trackId");
 
@@ -69,27 +74,33 @@ public class CreatePostFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         captionEditText = view.findViewById(R.id.editTextCaption);
-        locationEditText = view.findViewById(R.id.editTextLocation);
+        locationTextView = view.findViewById(R.id.textViewLocation);
+        locationLatTextView = view.findViewById(R.id.textViewLocationLat);
+        locationLongTextView = view.findViewById(R.id.textViewLocationLong);
         dateEditText = view.findViewById(R.id.editTextDate);
         trackIdEditText = view.findViewById(R.id.editTextTrackId);
         Button createPostButton = view.findViewById(R.id.createPostButton);
         Button selectLocationButton = view.findViewById(R.id.selectLocationButton);
 
         if(captionArgument != null) captionEditText.setText(captionArgument);
-        if(locationArgument != null) locationEditText.setText(locationArgument);
+        if(locationArgument != null) locationTextView.setText(locationArgument);
+        if(locationLatArgument != null) locationLatTextView.setText(locationLatArgument);
+        if(locationLongArgument != null) locationLongTextView.setText(locationLongArgument);
         if(dateArgument != null) dateEditText.setText(dateArgument);
         if(trackIdArgument != null) trackIdEditText.setText(trackIdArgument);
 
         createPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String locationText = locationEditText.getText().toString();
+                String locationText = locationTextView.getText().toString();
+                String locationLatText = locationLatTextView.getText().toString();
+                String locationLongText = locationLongTextView.getText().toString();
                 String captionText = captionEditText.getText().toString();
                 String dateText = dateEditText.getText().toString();
                 String trackIdText = trackIdEditText.getText().toString();
 
                 String toastMessage = "";
-                if(inputIsEmpty(locationText, captionText, trackIdText, dateText)){
+                if(inputIsEmpty(locationText, locationLatText, locationLongText, captionText, trackIdText, dateText)){
                     toastMessage += "Please make sure all fields are filled in.";
                 }
                 if(toastMessage.length() == 0 && !dateIsValid(dateText)){
@@ -100,6 +111,8 @@ public class CreatePostFragment extends Fragment {
                     return;
                 }
 
+                //TODO
+                // add lat and long to user post
                 UserPost post = new UserPost(locationText, captionText, trackIdText, dateText);
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
@@ -127,7 +140,9 @@ public class CreatePostFragment extends Fragment {
     private void navigateToMapFragment() {
         Bundle bundle = new Bundle();
         bundle.putString("caption", captionEditText.getText().toString());
-        bundle.putString("location", locationEditText.getText().toString());
+        bundle.putString("location", locationTextView.getText().toString());
+        bundle.putString("locationLat", locationLatTextView.getText().toString());
+        bundle.putString("locationLong", locationLongTextView.getText().toString());
         bundle.putString("date", dateEditText.getText().toString());
         bundle.putString("trackId", trackIdEditText.getText().toString());
         NavHostFragment.findNavController(CreatePostFragment.this).navigate(R.id.action_createPostFragment_to_selectLocationMapFragment, bundle);
@@ -141,24 +156,13 @@ public class CreatePostFragment extends Fragment {
     }
 
     private boolean locationPermissionsSet(Context context){
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else{
-            return true;
-        }
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermissions(){
         Activity main = (MainActivity) getActivity();
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
         ActivityCompat.requestPermissions(main, permissions, 1);
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
     }
 
     @Override

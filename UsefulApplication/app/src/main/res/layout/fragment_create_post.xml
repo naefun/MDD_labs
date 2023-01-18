@@ -24,7 +24,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Caption"/>
+            android:text="Caption"
+            android:textSize="20sp"/>
         <EditText
             android:id="@+id/editTextCaption"
             android:layout_width="match_parent"
@@ -36,13 +37,33 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location"/>
-        <EditText
-            android:id="@+id/editTextLocation"
+            android:text="Location"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/textViewLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="Birmingham..."
+            android:hint="United States..."
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Latitude"/>
+        <TextView
+            android:id="@+id/textViewLocationLat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="0.0000"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Longitude"/>
+        <TextView
+            android:id="@+id/textViewLocationLong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="0.0000"
             />
         <Button
             android:id="@+id/selectLocationButton"
@@ -53,7 +74,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date"/>
+            android:text="Date"
+            android:textSize="20sp"/>
         <EditText
             android:id="@+id/editTextDate"
             android:layout_width="match_parent"
@@ -65,7 +87,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Track id"/>
+            android:text="Track id"
+            android:textSize="20sp"/>
         <EditText
             android:id="@+id/editTextTrackId"
             android:layout_width="match_parent"
