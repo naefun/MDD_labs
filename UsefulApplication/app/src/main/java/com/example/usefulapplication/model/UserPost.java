@@ -24,14 +24,17 @@ public class UserPost {
     private String caption;
     @ColumnInfo(name = "song_id")
     private String songId;
+    @ColumnInfo(name = "image_uri")
+    private String imageUri;
 
-    public UserPost(String location, String caption, String songId, String date, String locationLatitude, String locationLongitude) {
+    public UserPost(String location, String caption, String songId, String date, String locationLatitude, String locationLongitude, String imageUri) {
         this.location = location;
         this.locationLatitude = locationLatitude;
         this.locationLongitude = locationLongitude;
         this.caption = caption;
         this.songId = songId;
         this.date = date;
+        this.imageUri = imageUri;
     }
 
     @Ignore
@@ -41,6 +44,10 @@ public class UserPost {
         this.caption = caption;
         this.songId = songId;
         this.date = date;
+    }
+
+    public String getImageUri() {
+        return imageUri;
     }
 
     public String getLocationLatitude() {

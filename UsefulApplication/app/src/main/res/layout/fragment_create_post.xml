@@ -21,6 +21,25 @@
             android:text="Create a post"
             android:textSize="34sp" />
 
+        <!-- image -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Image"
+            android:textSize="20sp"/>
+        <ImageView
+            android:id="@+id/createPostImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="15sp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pexels_kaique_rocha_50859" />
+        <Button
+            android:id="@+id/selectImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select image"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

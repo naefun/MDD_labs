@@ -1,5 +1,7 @@
 package com.example.usefulapplication.fragment;
 
+import static androidx.activity.result.contract.ActivityResultContracts.*;
+import static androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
 import static com.example.usefulapplication.helper.InputValidation.dateIsValid;
 import static com.example.usefulapplication.helper.InputValidation.inputIsEmpty;
 
@@ -7,6 +9,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VisualMediaType;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -45,6 +52,10 @@ public class CreatePostFragment extends Fragment {
     private TextView locationLongTextView;
     private EditText dateEditText;
     private EditText trackIdEditText;
+    private ImageView postImageView;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private Uri imageUri;
 
     public CreatePostFragment() {
         // Required empty public constructor
@@ -53,6 +64,25 @@ public class CreatePostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pickMedia =
+                registerForActivityResult(new PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                        imageUri = uri;
+                        postImageView.setImageURI(imageUri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+        requestPermissionLauncher = registerForActivityResult(new RequestPermission(), isGranted -> {
+            if(isGranted){
+                pickImage();
+                Log.i("permission", "onCreate: permissions");
+            }
+        });
     }
 
     @Override
@@ -79,8 +109,10 @@ public class CreatePostFragment extends Fragment {
         locationLongTextView = view.findViewById(R.id.textViewLocationLong);
         dateEditText = view.findViewById(R.id.editTextDate);
         trackIdEditText = view.findViewById(R.id.editTextTrackId);
+        postImageView = view.findViewById(R.id.createPostImage);
         Button createPostButton = view.findViewById(R.id.createPostButton);
         Button selectLocationButton = view.findViewById(R.id.selectLocationButton);
+        Button selectImageButton = view.findViewById(R.id.selectImageButton);
 
         if(captionArgument != null) captionEditText.setText(captionArgument);
         if(locationArgument != null) locationTextView.setText(locationArgument);
@@ -111,9 +143,7 @@ public class CreatePostFragment extends Fragment {
                     return;
                 }
 
-                //TODO
-                // add lat and long to user post
-                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText);
+                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText, imageUri.toString());
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
                         + ", " + captionText
@@ -122,6 +152,7 @@ public class CreatePostFragment extends Fragment {
                         + ", " + locationLongText
                         + ", " + dateText
                         + ", " + trackIdText
+                        + ", " + imageUri.toString()
                 );
                 Toast.makeText(view.getContext(), "post created", Toast.LENGTH_SHORT).show();
             }
@@ -135,6 +166,17 @@ public class CreatePostFragment extends Fragment {
             }else{
                 Log.i("selectLocationButton", "onViewCreated: permissions not set");
                 requestPermissions();
+            }
+        });
+
+        selectImageButton.setOnClickListener(selectImageView -> {
+            Log.i("select image", "onViewCreated: select image button pressed. Photo picker is available: " + PickVisualMedia.isPhotoPickerAvailable());
+            if(externalStoragePermissionsSet(this.getContext())){
+                Log.i("select image", "onViewCreated: external storage permissions are set");
+                pickImage();
+            }else{
+                Log.i("select image", "onViewCreated: external storage permissions are not set");
+                requestExternalStoragePermissions();
             }
         });
     }
@@ -161,10 +203,21 @@ public class CreatePostFragment extends Fragment {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    private boolean externalStoragePermissionsSet(Context context){
+        Boolean b = ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
+        Log.i("external storage permission", "pickMedia: " + b);
+        return b;
+    }
+
     private void requestPermissions(){
         Activity main = (MainActivity) getActivity();
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
         ActivityCompat.requestPermissions(main, permissions, 1);
+    }
+
+    private void requestExternalStoragePermissions(){
+        Log.i("request permissions", "requesting permissions");
+        requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
     }
 
     @Override
@@ -175,7 +228,24 @@ public class CreatePostFragment extends Fragment {
                 Log.i("requesting permissions", "onRequestPermissionsResult: permissions granted");
                 navigateToSelectMapLocationFragment();
             }
+        } else{
+            Log.i("grant results length", "onRequestPermissionsResult: " + grantResults.length);
         }
+    }
+
+    private void pickImage(){
+        // Registers a photo picker activity launcher in single-select mode.
+
+
+// Include only one of the following calls to launch(), depending on the types
+// of media that you want to allow the user to choose from.
+
+// Launch the photo picker and allow the user to choose images and videos.
+        Log.i("pick media", "pickMedia: picking media");
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType((VisualMediaType) INSTANCE)
+                .build());
+
     }
 
 

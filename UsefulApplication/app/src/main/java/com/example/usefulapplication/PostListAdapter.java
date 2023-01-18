@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -81,6 +82,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         holder.postLocationView.setText(post.getLocation());
         holder.postCaptionView.setText(post.getCaption());
         holder.postDateView.setText(post.getDate());
+        holder.postImageView.setImageURI(Uri.parse(post.getImageUri()));
 
 
         holder.postMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -197,6 +199,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         public final TextView postTitleView;
         public final TextView postArtistView;
         public final Button postMenuButton;
+        public final ImageView postImageView;
         final PostListAdapter adapter;
 
         public PostViewHolder(@NonNull View itemView, PostListAdapter adapter) {
@@ -208,6 +211,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             this.postArtistView = itemView.findViewById(R.id.post_song_artist);
             this.postTrackImageView = itemView.findViewById(R.id.post_song_image);
             this.postMenuButton = itemView.findViewById(R.id.post_menu_button);
+            this.postImageView = itemView.findViewById(R.id.post_image);
             this.adapter = adapter;
         }
     }
