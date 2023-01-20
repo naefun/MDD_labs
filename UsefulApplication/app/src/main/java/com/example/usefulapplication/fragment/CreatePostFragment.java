@@ -8,9 +8,12 @@ import static com.example.usefulapplication.helper.InputValidation.inputIsEmpty;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +48,7 @@ public class CreatePostFragment extends Fragment {
     private String locationLongArgument;
     private String dateArgument;
     private String trackIdArgument;
+    private String imageUriArgument;
 
     private EditText captionEditText;
     private TextView locationTextView;
@@ -96,6 +100,7 @@ public class CreatePostFragment extends Fragment {
         locationLongArgument = getArguments().getString("locationLong");
         dateArgument = getArguments().getString("date");
         trackIdArgument = getArguments().getString("trackId");
+        imageUriArgument = getArguments().getString("imageUri");
 
         return inflater.inflate(R.layout.fragment_create_post, container, false);
     }
@@ -120,6 +125,10 @@ public class CreatePostFragment extends Fragment {
         if(locationLongArgument != null) locationLongTextView.setText(locationLongArgument);
         if(dateArgument != null) dateEditText.setText(dateArgument);
         if(trackIdArgument != null) trackIdEditText.setText(trackIdArgument);
+        if(imageUriArgument != null) {
+            imageUri = Uri.parse(imageUriArgument);
+            postImageView.setImageURI(imageUri);
+        }
 
         createPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,9 +139,10 @@ public class CreatePostFragment extends Fragment {
                 String captionText = captionEditText.getText().toString();
                 String dateText = dateEditText.getText().toString();
                 String trackIdText = trackIdEditText.getText().toString();
+                String imageUriString = imageUri.toString();
 
                 String toastMessage = "";
-                if(inputIsEmpty(locationText, locationLatText, locationLongText, captionText, trackIdText, dateText)){
+                if(inputIsEmpty(locationText, locationLatText, locationLongText, captionText, trackIdText, dateText, imageUriString)){
                     toastMessage += "Please make sure all fields are filled in.";
                 }
                 if(toastMessage.length() == 0 && !dateIsValid(dateText)){
@@ -143,7 +153,7 @@ public class CreatePostFragment extends Fragment {
                     return;
                 }
 
-                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText, imageUri.toString());
+                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText, imageUriString);
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
                         + ", " + captionText
@@ -152,7 +162,7 @@ public class CreatePostFragment extends Fragment {
                         + ", " + locationLongText
                         + ", " + dateText
                         + ", " + trackIdText
-                        + ", " + imageUri.toString()
+                        + ", " + imageUriString
                 );
                 Toast.makeText(view.getContext(), "post created", Toast.LENGTH_SHORT).show();
             }
@@ -171,12 +181,12 @@ public class CreatePostFragment extends Fragment {
 
         selectImageButton.setOnClickListener(selectImageView -> {
             Log.i("select image", "onViewCreated: select image button pressed. Photo picker is available: " + PickVisualMedia.isPhotoPickerAvailable());
-            if(externalStoragePermissionsSet(this.getContext())){
+            if(readMediaPermissionsSet(this.getContext())){
                 Log.i("select image", "onViewCreated: external storage permissions are set");
                 pickImage();
             }else{
                 Log.i("select image", "onViewCreated: external storage permissions are not set");
-                requestExternalStoragePermissions();
+                requestReadMediaPermissions();
             }
         });
     }
@@ -189,6 +199,7 @@ public class CreatePostFragment extends Fragment {
         bundle.putString("locationLong", locationLongTextView.getText().toString());
         bundle.putString("date", dateEditText.getText().toString());
         bundle.putString("trackId", trackIdEditText.getText().toString());
+        bundle.putString("imageUri", imageUri.toString());
         NavHostFragment.findNavController(CreatePostFragment.this).navigate(R.id.action_createPostFragment_to_selectLocationMapFragment, bundle);
     }
 
@@ -203,7 +214,7 @@ public class CreatePostFragment extends Fragment {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private boolean externalStoragePermissionsSet(Context context){
+    private boolean readMediaPermissionsSet(Context context){
         Boolean b = ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED;
         Log.i("external storage permission", "pickMedia: " + b);
         return b;
@@ -215,7 +226,7 @@ public class CreatePostFragment extends Fragment {
         ActivityCompat.requestPermissions(main, permissions, 1);
     }
 
-    private void requestExternalStoragePermissions(){
+    private void requestReadMediaPermissions(){
         Log.i("request permissions", "requesting permissions");
         requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
     }

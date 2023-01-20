@@ -46,6 +46,7 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
     private String newLocationLong;
     private String dateArgument;
     private String trackIdArgument;
+    private String imageUriArgument;
     private GoogleMap googleMap;
     /**
      * Manipulates the map once available.
@@ -103,6 +104,7 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
         locationLongArgument = getArguments().getString("locationLong");
         dateArgument = getArguments().getString("date");
         trackIdArgument = getArguments().getString("trackId");
+        imageUriArgument = getArguments().getString("imageUri");
 
         return inflater.inflate(R.layout.fragment_create_post_select_map_location, container, false);
     }
@@ -128,6 +130,7 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
             bundle.putString("locationLong", locationLongArgument);
             bundle.putString("date", dateArgument);
             bundle.putString("trackId", trackIdArgument);
+            bundle.putString("imageUri", imageUriArgument);
             NavHostFragment.findNavController(CreatePostSelectMapLocationFragment.this).navigate(R.id.action_selectLocationMapFragment_to_createPostFragment, bundle);
         });
 
@@ -141,6 +144,7 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
             bundle.putString("locationLong", newLocationLong);
             bundle.putString("date", dateArgument);
             bundle.putString("trackId", trackIdArgument);
+            bundle.putString("imageUri", imageUriArgument);
             NavHostFragment.findNavController(CreatePostSelectMapLocationFragment.this).navigate(R.id.action_selectLocationMapFragment_to_createPostFragment, bundle);
 
         });

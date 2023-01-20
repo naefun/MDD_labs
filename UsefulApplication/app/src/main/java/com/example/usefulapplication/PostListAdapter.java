@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -82,7 +86,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         holder.postLocationView.setText(post.getLocation());
         holder.postCaptionView.setText(post.getCaption());
         holder.postDateView.setText(post.getDate());
-        holder.postImageView.setImageURI(Uri.parse(post.getImageUri()));
+        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED){
+            holder.postImageView.setImageURI(Uri.parse(post.getImageUri()));
+        }
 
 
         holder.postMenuButton.setOnClickListener(new View.OnClickListener() {

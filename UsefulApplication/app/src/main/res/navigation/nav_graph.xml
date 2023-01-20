@@ -50,6 +50,10 @@
             android:name="locationLong"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="imageUri"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/editPost"
@@ -86,6 +90,10 @@
             app:nullable="true" />
         <argument
             android:name="locationLong"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="imageUri"
             app:argType="string"
             app:nullable="true" />
     </fragment>
