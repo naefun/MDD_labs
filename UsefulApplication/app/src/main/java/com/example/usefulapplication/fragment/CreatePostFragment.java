@@ -1,7 +1,8 @@
 package com.example.usefulapplication.fragment;
 
-import static androidx.activity.result.contract.ActivityResultContracts.*;
+import static androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia;
 import static androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
+import static androidx.activity.result.contract.ActivityResultContracts.RequestPermission;
 import static com.example.usefulapplication.helper.InputValidation.dateIsValid;
 import static com.example.usefulapplication.helper.InputValidation.inputIsEmpty;
 
@@ -10,10 +11,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +75,8 @@ public class CreatePostFragment extends Fragment {
                         Log.d("PhotoPicker", "Selected URI: " + uri);
                         imageUri = uri;
                         postImageView.setImageURI(imageUri);
+                        int flag = Intent.FLAG_GRANT_READ_URI_PERMISSION;
+                        getContext().getContentResolver().takePersistableUriPermission(imageUri, flag);
                     } else {
                         Log.d("PhotoPicker", "No media selected");
                     }
@@ -199,7 +200,10 @@ public class CreatePostFragment extends Fragment {
         bundle.putString("locationLong", locationLongTextView.getText().toString());
         bundle.putString("date", dateEditText.getText().toString());
         bundle.putString("trackId", trackIdEditText.getText().toString());
-        bundle.putString("imageUri", imageUri.toString());
+
+        String imageUriString = imageUri != null ? imageUri.toString() : null;
+        bundle.putString("imageUri", imageUriString);
+
         NavHostFragment.findNavController(CreatePostFragment.this).navigate(R.id.action_createPostFragment_to_selectLocationMapFragment, bundle);
     }
 
