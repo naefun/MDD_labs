@@ -38,12 +38,15 @@ public class UserPost {
     }
 
     @Ignore
-    public UserPost(String location, String caption, String songId, String date, Long uid) {
+    public UserPost(String location, String caption, String songId, String date, Long uid, String locationLatitude, String locationLongitude, String imageUri) {
         this.uid = uid;
         this.location = location;
         this.caption = caption;
         this.songId = songId;
         this.date = date;
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.imageUri = imageUri;
     }
 
     public String getImageUri() {

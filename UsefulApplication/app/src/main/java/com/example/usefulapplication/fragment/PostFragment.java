@@ -67,6 +67,8 @@ public class PostFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        Log.i("PostFragment", "onViewCreated: Loaded post fragment");
+
         FloatingActionButton fab = view.findViewById(R.id.addPostFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

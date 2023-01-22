@@ -99,6 +99,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         bundle.putString("caption", post.getCaption());
                         bundle.putString("location", post.getLocation());
                         bundle.putString("date", post.getDate());
+                        bundle.putString("locationLat", post.getLocationLatitude());
+                        bundle.putString("locationLong", post.getLocationLongitude());
+                        bundle.putString("imageUri", post.getImageUri());
                         NavHostFragment.findNavController(parentFragment).navigate(R.id.action_postFragment_to_editPost, bundle);
                         return true;
                     }

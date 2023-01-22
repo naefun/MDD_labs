@@ -166,6 +166,8 @@ public class CreatePostFragment extends Fragment {
                         + ", " + imageUriString
                 );
                 Toast.makeText(view.getContext(), "post created", Toast.LENGTH_SHORT).show();
+                NavHostFragment.findNavController(CreatePostFragment.this).navigate(R.id.action_createPostFragment_to_postFragment);
+
             }
         });
 

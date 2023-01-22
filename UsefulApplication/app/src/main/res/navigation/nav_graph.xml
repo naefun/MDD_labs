@@ -54,12 +54,19 @@
             android:name="imageUri"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_createPostFragment_to_postFragment"
+            app:destination="@id/postFragment" />
     </fragment>
     <fragment
         android:id="@+id/editPost"
         android:name="com.example.usefulapplication.fragment.EditPost"
         android:label="fragment_edit_post"
-        tools:layout="@layout/fragment_edit_post" />
+        tools:layout="@layout/fragment_edit_post" >
+        <action
+            android:id="@+id/action_editPost_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
     <fragment
         android:id="@+id/selectLocationMapFragment"
         android:name="com.example.usefulapplication.fragment.CreatePostSelectMapLocationFragment"
