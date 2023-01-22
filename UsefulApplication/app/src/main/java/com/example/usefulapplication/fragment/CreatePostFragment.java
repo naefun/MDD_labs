@@ -39,6 +39,8 @@ import com.example.usefulapplication.database.AppDatabase;
 import com.example.usefulapplication.database.DatabaseFactory;
 import com.example.usefulapplication.model.UserPost;
 
+import java.util.Date;
+
 
 public class CreatePostFragment extends Fragment {
     private String captionArgument;
@@ -117,6 +119,7 @@ public class CreatePostFragment extends Fragment {
         trackIdEditText = view.findViewById(R.id.editTextTrackId);
         postImageView = view.findViewById(R.id.createPostImage);
         Button createPostButton = view.findViewById(R.id.createPostButton);
+        Button cancelPostButton = view.findViewById(R.id.cancelPostButton);
         Button selectLocationButton = view.findViewById(R.id.selectLocationButton);
         Button selectImageButton = view.findViewById(R.id.selectImageButton);
 
@@ -140,7 +143,7 @@ public class CreatePostFragment extends Fragment {
                 String captionText = captionEditText.getText().toString();
                 String dateText = dateEditText.getText().toString();
                 String trackIdText = trackIdEditText.getText().toString();
-                String imageUriString = imageUri.toString();
+                String imageUriString = imageUri != null ? imageUri.toString() : "";
 
                 String toastMessage = "";
                 if(inputIsEmpty(locationText, locationLatText, locationLongText, captionText, trackIdText, dateText, imageUriString)){
@@ -154,7 +157,10 @@ public class CreatePostFragment extends Fragment {
                     return;
                 }
 
-                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText, imageUriString);
+                Date date = new Date();
+                String postCreationTimeMillis = String.valueOf(date.getTime());
+
+                UserPost post = new UserPost(locationText, captionText, trackIdText, dateText, locationLatText, locationLongText, imageUriString, postCreationTimeMillis);
                 createPost(view.getContext(), post);
                 Log.i("NB", "onClick: post created!"
                         + ", " + captionText
@@ -164,11 +170,16 @@ public class CreatePostFragment extends Fragment {
                         + ", " + dateText
                         + ", " + trackIdText
                         + ", " + imageUriString
+                        + ", " + postCreationTimeMillis
                 );
                 Toast.makeText(view.getContext(), "post created", Toast.LENGTH_SHORT).show();
                 NavHostFragment.findNavController(CreatePostFragment.this).navigate(R.id.action_createPostFragment_to_postFragment);
 
             }
+        });
+
+        cancelPostButton.setOnClickListener(cancelPostView -> {
+            NavHostFragment.findNavController(CreatePostFragment.this).navigate(R.id.action_createPostFragment_to_postFragment);
         });
 
         selectLocationButton.setOnClickListener(view1 -> {

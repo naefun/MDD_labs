@@ -37,6 +37,9 @@ import com.example.usefulapplication.service.DeezerController;
 import com.example.usefulapplication.service.TrackRepository;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -82,6 +85,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         holder.postCaptionView.setText(post.getCaption());
         holder.postDateView.setText(post.getDate());
         holder.postImageView.setImageURI(Uri.parse(post.getImageUri()));
+        holder.postDatePostedView.setText("Posted: "+convertMillisToDate(post.getPostCreationTimeMillis()));
+        Log.i("millis to date", "onBindViewHolder: "+convertMillisToDate(post.getPostCreationTimeMillis()));
 
         holder.postMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,8 +197,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         }
     }
 
+    private String convertMillisToDate(String millis){
+        DateFormat df = new SimpleDateFormat("dd:MM:yy");
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(millis));
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH)+1;
+        int year = cal.get(Calendar.YEAR);
+        return day+"/"+month+"/"+year;
+//        return df.format(cal.getTime());
+    }
+
     class PostViewHolder extends RecyclerView.ViewHolder {
         public final TextView postDateView;
+        public final TextView postDatePostedView;
         public final Button postLocationView;
         public final TextView postCaptionView;
         public final ImageView postTrackImageView;
@@ -206,6 +223,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         public PostViewHolder(@NonNull View itemView, PostListAdapter adapter) {
             super(itemView);
             this.postDateView = itemView.findViewById(R.id.post_date);
+            this.postDatePostedView = itemView.findViewById(R.id.postCreationDateTextView);
             this.postLocationView = itemView.findViewById(R.id.post_location);
             this.postCaptionView = itemView.findViewById(R.id.post_caption);
             this.postTitleView = itemView.findViewById(R.id.post_song_title);

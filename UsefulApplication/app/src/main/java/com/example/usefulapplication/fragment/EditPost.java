@@ -39,6 +39,7 @@ public class EditPost extends Fragment {
     private static final String ARG_LOCATION_LONG = "locationLong";
     private static final String ARG_DATE = "date";
     private static final String ARG_IMAGE_URI = "imageUri";
+    private static final String ARG_POST_CREATION_TIME_MILLIS = "postCreationTimeMillis";
 
 
     private Long postId;
@@ -49,6 +50,7 @@ public class EditPost extends Fragment {
     private String locationLat;
     private String locationLong;
     private String imageUri;
+    private String postCreationTimeMillis;
 
     public EditPost() {
         // Required empty public constructor
@@ -66,6 +68,7 @@ public class EditPost extends Fragment {
             locationLong = getArguments().getString(ARG_LOCATION_LONG);
             date = getArguments().getString(ARG_DATE);
             imageUri = getArguments().getString(ARG_IMAGE_URI);
+            postCreationTimeMillis = getArguments().getString(ARG_POST_CREATION_TIME_MILLIS);
         }
     }
 
@@ -109,7 +112,7 @@ public class EditPost extends Fragment {
                     return;
                 }
 
-                UserPost post = new UserPost(location, captionText, trackText, dateText,  postId, locationLat, locationLong, imageUri);
+                UserPost post = new UserPost(location, captionText, trackText, dateText,  postId, locationLat, locationLong, imageUri, postCreationTimeMillis);
                 updatePost(view.getContext(), post);
                 Toast.makeText(view.getContext(), "Post successfully updated", Toast.LENGTH_SHORT).show();
                 NavHostFragment.findNavController(EditPost.this).navigate(R.id.action_editPost_to_postFragment);

@@ -26,8 +26,11 @@ public class UserPost {
     private String songId;
     @ColumnInfo(name = "image_uri")
     private String imageUri;
+    @ColumnInfo(name = "post_creation_time_millis")
+    private String postCreationTimeMillis;
 
-    public UserPost(String location, String caption, String songId, String date, String locationLatitude, String locationLongitude, String imageUri) {
+
+    public UserPost(String location, String caption, String songId, String date, String locationLatitude, String locationLongitude, String imageUri, String postCreationTimeMillis) {
         this.location = location;
         this.locationLatitude = locationLatitude;
         this.locationLongitude = locationLongitude;
@@ -35,10 +38,11 @@ public class UserPost {
         this.songId = songId;
         this.date = date;
         this.imageUri = imageUri;
+        this.postCreationTimeMillis = postCreationTimeMillis;
     }
 
     @Ignore
-    public UserPost(String location, String caption, String songId, String date, Long uid, String locationLatitude, String locationLongitude, String imageUri) {
+    public UserPost(String location, String caption, String songId, String date, Long uid, String locationLatitude, String locationLongitude, String imageUri, String postCreationTimeMillis) {
         this.uid = uid;
         this.location = location;
         this.caption = caption;
@@ -47,6 +51,11 @@ public class UserPost {
         this.locationLatitude = locationLatitude;
         this.locationLongitude = locationLongitude;
         this.imageUri = imageUri;
+        this.postCreationTimeMillis = postCreationTimeMillis;
+    }
+
+    public String getPostCreationTimeMillis() {
+        return postCreationTimeMillis;
     }
 
     public String getImageUri() {
