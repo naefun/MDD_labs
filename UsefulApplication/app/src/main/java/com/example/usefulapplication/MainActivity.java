@@ -2,6 +2,7 @@ package com.example.usefulapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(myIntent, 0);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PostListAdapter.stopSong();
+        Log.i("paused", "onPause: app paused");
     }
 
     // 1. add post image to bundle arguments when moving between select location map
