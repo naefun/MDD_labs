@@ -145,7 +145,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                if(currentMediaPlayerHolder.equals(holder)){
+                                if(currentMediaPlayerHolder != null && currentMediaPlayerHolder.equals(holder)){
                                     stopSong();
                                 }
                                 AppDatabase appDatabase = DatabaseFactory.getAppDatabase(view.getContext());
