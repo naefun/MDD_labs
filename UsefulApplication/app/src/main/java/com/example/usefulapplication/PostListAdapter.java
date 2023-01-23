@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,10 +42,13 @@ import com.example.usefulapplication.service.DeezerController;
 import com.example.usefulapplication.service.TrackRepository;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,6 +66,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     private LifecycleOwner lifecycleOwner;
     private Fragment parentFragment;
     private Context context;
+    private static MediaPlayer mediaPlayer;
+    private static PostListAdapter.PostViewHolder currentMediaPlayerHolder;
+    Map<Integer, String> songUris;
 
     public PostListAdapter(Context context, List<UserPost> posts, LifecycleOwner viewLifecycleOwner, Fragment fragment) {
         this.inflater = LayoutInflater.from(context);
@@ -70,12 +79,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         this.lifecycleOwner = viewLifecycleOwner;
         this.parentFragment = fragment;
         this.context = context;
+        this.mediaPlayer = new MediaPlayer();
+        this.songUris = new HashMap<>();
     }
 
     @NonNull
     @Override
     public PostListAdapter.PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.postlist_item, parent, false);
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            mp.reset();
+            currentMediaPlayerHolder.playSongButton.setText("Play song");
+            currentMediaPlayerHolder = null;
+        });
         return new PostViewHolder(itemView, this);
     }
 
@@ -88,6 +105,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         holder.postDateView.setText("Image taken: "+post.getDate());
         holder.postImageView.setImageURI(Uri.parse(post.getImageUri()));
         holder.postDatePostedView.setText("Posted: "+convertMillisToDate(post.getPostCreationTimeMillis()));
+
         Log.i("millis to date", "onBindViewHolder: "+convertMillisToDate(post.getPostCreationTimeMillis()));
 
         holder.postMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +117,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 popupMenu.getMenu().findItem(R.id.menu_edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+                        stopSong();
                         Log.i("NB", "onMenuItemClick: " + menuItem.getTitle());
                         Bundle bundle = new Bundle();
                         bundle.putLong("postId", post.getUid());
@@ -125,6 +144,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                if(currentMediaPlayerHolder.equals(holder)){
+                                    stopSong();
+                                }
                                 AppDatabase appDatabase = DatabaseFactory.getAppDatabase(view.getContext());
                                 UserPostDao userPostDao = appDatabase.userPostDao();
                                 userPostDao.deletePost(post);
@@ -151,12 +173,32 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         });
 
         holder.postLocationView.setOnClickListener(view -> {
+            PostListAdapter.stopSong();
             ViewMapHandler viewMapHandler = new ViewMapHandler(post.getLocationLatitude(), post.getLocationLongitude(), this.parentFragment.getActivity());
             viewMapHandler.handle();
         });
 
         holder.postImageContainer.setOnClickListener(postImageContainerView -> {
+            if(this.currentMediaPlayerHolder != null && holder.postTrackContainer.getVisibility() == View.VISIBLE && this.currentMediaPlayerHolder.equals(holder)){
+                stopSong();
+            }
             holder.postTrackContainer.setVisibility(holder.postTrackContainer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            holder.playSongButton.setOnClickListener(playSongButtonView -> {
+                String songUriString = songUris.get(position);
+                if(songUriString.isEmpty() || songUriString == null){
+                    Toast.makeText(context, "Cannot play song.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Uri myUri = Uri.parse(songUriString);
+                if(mediaPlayer.isPlaying() && currentMediaPlayerHolder.equals(holder)){
+                    stopSong();
+                }else if(mediaPlayer.isPlaying() && !currentMediaPlayerHolder.equals(holder)){
+                    stopSong();
+                    playSong(myUri, holder);
+                }else{
+                    playSong(myUri, holder);
+                }
+            });;
         });
 
         MutableLiveData<Track> track = new MutableLiveData<>();
@@ -168,6 +210,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 try{
                     holder.postTitleView.setText(track.getTitle());
                     holder.postArtistView.setText(track.getArtist().getName());
+                    songUris.put(position, track.getPreview());
                     Log.i("NB", "onChanged: " + track.getAlbum().getCover_medium());
                     Picasso.get().load(track.getAlbum().getCover_medium()).into(holder.postTrackImageView);
                 }catch(Exception e){
@@ -176,6 +219,36 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             }
         };
         track.observe(lifecycleOwner, trackObserver);
+    }
+
+    private void playSong(Uri songUri, PostListAdapter.PostViewHolder holder){
+        if(songUri.toString().isEmpty() || songUri == null){
+            return;
+        }
+        try {
+            mediaPlayer.setDataSource(parentFragment.getContext(), songUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.currentMediaPlayerHolder = holder;
+        mediaPlayer.start();
+        this.currentMediaPlayerHolder.playSongButton.setText("Stop song");
+        this.currentMediaPlayerHolder.playSongButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_pause_circle_15, 0, 0, 0);
+
+    }
+
+    public static void stopSong(){
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            currentMediaPlayerHolder.playSongButton.setText("Play song");
+            currentMediaPlayerHolder.playSongButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_play_circle_15, 0, 0, 0);
+        }
     }
 
     @Override
@@ -227,6 +300,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         public final ImageView postImageView;
         public final ConstraintLayout postImageContainer;
         public final LinearLayout postTrackContainer;
+        public final Button playSongButton;
         final PostListAdapter adapter;
 
         public PostViewHolder(@NonNull View itemView, PostListAdapter adapter) {
@@ -242,6 +316,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             this.postImageView = itemView.findViewById(R.id.post_image);
             this.postImageContainer = itemView.findViewById(R.id.postImageContainer);
             this.postTrackContainer = itemView.findViewById(R.id.postTrackContainer);
+            this.playSongButton = itemView.findViewById(R.id.play_song_button);
             this.adapter = adapter;
         }
     }

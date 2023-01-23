@@ -85,6 +85,7 @@ public class PostFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PostListAdapter.stopSong();
                 NavHostFragment.findNavController(PostFragment.this).navigate(R.id.action_postFragment_to_createPostFragment);
             }
         });
@@ -96,6 +97,7 @@ public class PostFragment extends Fragment {
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PostListAdapter.stopSong();
                 String location = parent.getItemAtPosition(position).toString();
                 Log.i("Spinner selected", "onItemSelected: " + location);
                 filterPostsByLocation(viewGroupContainer, location);
@@ -118,6 +120,7 @@ public class PostFragment extends Fragment {
         sortDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PostListAdapter.stopSong();
                 String sortChoice = parent.getItemAtPosition(position).toString();
                 sortDateNewestFirst = sortChoice.equalsIgnoreCase(SORT_NEWEST_FIRST);
                 sortPostsByDate(sortDateNewestFirst);

@@ -6,6 +6,15 @@ public class Track implements Serializable {
     private String title;
     private Artist artist;
     private Album album;
+    private String preview;
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
 
     public String getTitle() {
         return title;

@@ -86,7 +86,7 @@
 
                     <!-- LinearLayout -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <!-- Song title -->
@@ -104,6 +104,20 @@
                             android:text="Some artist name"
                             android:textSize="12sp"
                             android:textColor="#fff"/>
+                        <Button
+                            android:id="@+id/play_song_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:paddingVertical="5dp"
+                            android:paddingHorizontal="10dp"
+                            android:textSize="10dp"
+                            android:includeFontPadding="false"
+                            android:gravity="center"
+                            android:textAllCaps="false"
+                            android:drawableLeft="@drawable/baseline_play_circle_24"
+                            android:text="Play song" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -139,7 +153,6 @@
                 android:gravity="center"
                 android:textAllCaps="false"
                 android:drawableLeft="@drawable/baseline_location_on_10"
-
                 android:text="Birmingham" />
         </LinearLayout>
 
@@ -150,6 +163,20 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="7sp"
             android:text="This is some text that can be used as a caption but it does not mean anything..." />
+
+<!--        <Button-->
+<!--            android:id="@+id/play_song_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:minWidth="0dp"-->
+<!--            android:minHeight="0dp"-->
+<!--            android:paddingVertical="5dp"-->
+<!--            android:paddingHorizontal="10dp"-->
+<!--            android:textSize="10dp"-->
+<!--            android:includeFontPadding="false"-->
+<!--            android:gravity="center"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:text="Play song" />-->
     </LinearLayout>
 
     <TextView
