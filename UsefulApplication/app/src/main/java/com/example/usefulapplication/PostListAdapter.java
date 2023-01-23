@@ -91,6 +91,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         mediaPlayer.setOnCompletionListener(mp -> {
             mp.reset();
             currentMediaPlayerHolder.playSongButton.setText("Play song");
+            currentMediaPlayerHolder.playSongButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_play_circle_15, 0, 0, 0);
             currentMediaPlayerHolder = null;
         });
         return new PostViewHolder(itemView, this);
@@ -179,13 +180,13 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         });
 
         holder.postImageContainer.setOnClickListener(postImageContainerView -> {
-            if(this.currentMediaPlayerHolder != null && holder.postTrackContainer.getVisibility() == View.VISIBLE && this.currentMediaPlayerHolder.equals(holder)){
+            if(currentMediaPlayerHolder != null && holder.postTrackContainer.getVisibility() == View.VISIBLE && currentMediaPlayerHolder.equals(holder)){
                 stopSong();
             }
             holder.postTrackContainer.setVisibility(holder.postTrackContainer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             holder.playSongButton.setOnClickListener(playSongButtonView -> {
                 String songUriString = songUris.get(position);
-                if(songUriString.isEmpty() || songUriString == null){
+                if(songUriString == null || songUriString.isEmpty()){
                     Toast.makeText(context, "Cannot play song.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -222,7 +223,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     }
 
     private void playSong(Uri songUri, PostListAdapter.PostViewHolder holder){
-        if(songUri.toString().isEmpty() || songUri == null){
+        if(songUri == null || songUri.toString().isEmpty()){
             return;
         }
         try {
@@ -235,10 +236,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.currentMediaPlayerHolder = holder;
+        currentMediaPlayerHolder = holder;
         mediaPlayer.start();
-        this.currentMediaPlayerHolder.playSongButton.setText("Stop song");
-        this.currentMediaPlayerHolder.playSongButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_pause_circle_15, 0, 0, 0);
+        currentMediaPlayerHolder.playSongButton.setText("Stop song");
+        currentMediaPlayerHolder.playSongButton.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.baseline_stop_circle_15, 0, 0, 0);
 
     }
 

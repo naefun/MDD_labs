@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.EditPost">
+    tools:context=".fragment.EditPost"
+    android:layout_margin="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,13 +26,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Caption"/>
+
         <EditText
             android:id="@+id/edit_editTextCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
             android:hint="A special time with the friends..."
-            />
+            android:inputType="textMultiLine" />
 
         <TextView
             android:layout_width="match_parent"
@@ -62,8 +63,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="5dp">
+        app:layout_constraintStart_toStartOf="parent">
         <Button
             android:id="@+id/cancel_update_post_button"
             android:layout_width="0dp"

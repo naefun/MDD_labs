@@ -28,19 +28,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginRight="10dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Filter location"
+                    android:backgroundTint="#BC4747"
                     android:gravity="center_vertical"
+                    android:text="Filter location"
                     app:drawableLeftCompat="@drawable/baseline_filter_alt_24" />
+
                 <Spinner
                     android:id="@+id/locationFilterDropdown"
                     android:layout_width="wrap_content"
-                    android:minWidth="100dp"
                     android:layout_height="wrap_content"
-                    android:spinnerMode="dropdown"
-                    />
+                    android:minWidth="100dp"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
