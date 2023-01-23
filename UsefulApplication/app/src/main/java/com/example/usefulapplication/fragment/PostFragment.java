@@ -120,7 +120,7 @@ public class PostFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String sortChoice = parent.getItemAtPosition(position).toString();
                 sortDateNewestFirst = sortChoice.equalsIgnoreCase(SORT_NEWEST_FIRST);
-                sortPostsByDate(viewGroupContainer, sortDateNewestFirst);
+                sortPostsByDate(sortDateNewestFirst);
             }
 
             @Override
@@ -144,10 +144,10 @@ public class PostFragment extends Fragment {
                 return false;
             }
         }).collect(Collectors.toList());
-        sortPostsByDate(container, sortDateNewestFirst);
+        sortPostsByDate(sortDateNewestFirst);
     }
 
-    private void sortPostsByDate(ViewGroup container, Boolean descending){
+    private void sortPostsByDate(Boolean descending){
         if(descending){
             posts.sort((p1, p2) -> (int) (Long.parseLong(p2.getPostCreationTimeMillis()) - Long.parseLong(p1.getPostCreationTimeMillis())));
         }else{
@@ -159,7 +159,7 @@ public class PostFragment extends Fragment {
 
     private void displayAllPosts(ViewGroup container){
         posts = DataSource.getDataSource(container.getContext()).getData();
-        sortPostsByDate(container, sortDateNewestFirst);
+        sortPostsByDate(sortDateNewestFirst);
     }
 
     private String[] getPostLocations(ViewGroup container){

@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.usefulapplication.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,6 +49,8 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
     private String trackIdArgument;
     private String imageUriArgument;
     private GoogleMap googleMap;
+
+    private boolean useNewLocationValues = false;
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -137,6 +140,17 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
         Button saveButton = view.findViewById(R.id.createMapLocationSaveButton);
         saveButton.setOnClickListener(saveButtonView -> {
             Log.i("cancelButtonView", "onViewCreated: cancel button pressed");
+
+            if(!useNewLocationValues && locationArgument.isEmpty() && locationLongArgument.isEmpty() && locationLatArgument.isEmpty()){
+                Log.i("new location", "onViewCreated: location has not been selected");
+                Toast.makeText(view.getContext(), "Please select a location", Toast.LENGTH_SHORT).show();
+                return;
+            }else if(!useNewLocationValues){
+                newLocation = locationArgument;
+                newLocationLat = locationLatArgument;
+                newLocationLong = locationLongArgument;
+            }
+
             Bundle bundle = new Bundle();
             bundle.putString("caption", captionArgument);
             bundle.putString("location", newLocation);
@@ -168,6 +182,7 @@ public class CreatePostSelectMapLocationFragment extends Fragment implements Goo
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         Log.i("map clicked", "onMapClick: lat = " + latLng.latitude + " long = " + latLng.longitude);
+        useNewLocationValues = true;
         googleMap.clear();
         googleMap.addMarker(new MarkerOptions().position(latLng).title("Image location"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

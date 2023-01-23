@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit post"
-            android:textSize="34sp" />
+            android:textSize="20sp"
+            android:layout_marginBottom="15dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -56,14 +57,27 @@
             />
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/update_post_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="5dp">
+        <Button
+            android:id="@+id/cancel_update_post_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp" />
+        <Button
+            android:id="@+id/update_post_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Update post"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"  />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

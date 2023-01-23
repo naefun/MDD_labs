@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -83,7 +85,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 
         holder.postLocationView.setText(post.getLocation());
         holder.postCaptionView.setText(post.getCaption());
-        holder.postDateView.setText(post.getDate());
+        holder.postDateView.setText("Image taken: "+post.getDate());
         holder.postImageView.setImageURI(Uri.parse(post.getImageUri()));
         holder.postDatePostedView.setText("Posted: "+convertMillisToDate(post.getPostCreationTimeMillis()));
         Log.i("millis to date", "onBindViewHolder: "+convertMillisToDate(post.getPostCreationTimeMillis()));
@@ -107,6 +109,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         bundle.putString("locationLat", post.getLocationLatitude());
                         bundle.putString("locationLong", post.getLocationLongitude());
                         bundle.putString("imageUri", post.getImageUri());
+                        bundle.putString("postCreationTimeMillis", post.getPostCreationTimeMillis());
                         NavHostFragment.findNavController(parentFragment).navigate(R.id.action_postFragment_to_editPost, bundle);
                         return true;
                     }
@@ -150,6 +153,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         holder.postLocationView.setOnClickListener(view -> {
             ViewMapHandler viewMapHandler = new ViewMapHandler(post.getLocationLatitude(), post.getLocationLongitude(), this.parentFragment.getActivity());
             viewMapHandler.handle();
+        });
+
+        holder.postImageContainer.setOnClickListener(postImageContainerView -> {
+            holder.postTrackContainer.setVisibility(holder.postTrackContainer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         });
 
         MutableLiveData<Track> track = new MutableLiveData<>();
@@ -218,6 +225,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         public final TextView postArtistView;
         public final Button postMenuButton;
         public final ImageView postImageView;
+        public final ConstraintLayout postImageContainer;
+        public final LinearLayout postTrackContainer;
         final PostListAdapter adapter;
 
         public PostViewHolder(@NonNull View itemView, PostListAdapter adapter) {
@@ -231,6 +240,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             this.postTrackImageView = itemView.findViewById(R.id.post_song_image);
             this.postMenuButton = itemView.findViewById(R.id.post_menu_button);
             this.postImageView = itemView.findViewById(R.id.post_image);
+            this.postImageContainer = itemView.findViewById(R.id.postImageContainer);
+            this.postTrackContainer = itemView.findViewById(R.id.postTrackContainer);
             this.adapter = adapter;
         }
     }
