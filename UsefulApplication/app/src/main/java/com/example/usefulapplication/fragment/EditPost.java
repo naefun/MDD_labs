@@ -21,7 +21,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.usefulapplication.R;
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
-import com.example.usefulapplication.database.DatabaseFactory;
+import com.example.usefulapplication.database.DatabaseSingleton;
 import com.example.usefulapplication.model.UserPost;
 
 /**
@@ -127,7 +127,7 @@ public class EditPost extends Fragment {
     }
 
     private void updatePost(Context context, UserPost post){
-        AppDatabase appDatabase = DatabaseFactory.getAppDatabase(context);
+        AppDatabase appDatabase = DatabaseSingleton.getAppDatabase(context);
         UserPostDao userPostDao = appDatabase.userPostDao();
 
         userPostDao.updateUserPost(post);

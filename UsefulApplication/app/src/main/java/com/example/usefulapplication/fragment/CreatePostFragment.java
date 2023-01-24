@@ -36,7 +36,7 @@ import com.example.usefulapplication.MainActivity;
 import com.example.usefulapplication.R;
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
-import com.example.usefulapplication.database.DatabaseFactory;
+import com.example.usefulapplication.database.DatabaseSingleton;
 import com.example.usefulapplication.model.UserPost;
 
 import java.util.Date;
@@ -221,7 +221,7 @@ public class CreatePostFragment extends Fragment {
     }
 
     private void createPost(Context context, UserPost post){
-        AppDatabase appDatabase = DatabaseFactory.getAppDatabase(context);
+        AppDatabase appDatabase = DatabaseSingleton.getAppDatabase(context);
         UserPostDao userPostDao = appDatabase.userPostDao();
 
         userPostDao.insertUserPost(post);

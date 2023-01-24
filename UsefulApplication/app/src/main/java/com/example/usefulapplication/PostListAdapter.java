@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
-import com.example.usefulapplication.database.DatabaseFactory;
+import com.example.usefulapplication.database.DatabaseSingleton;
 import com.example.usefulapplication.model.Track;
 import com.example.usefulapplication.model.UserPost;
 import com.example.usefulapplication.service.DeezerController;
@@ -148,7 +147,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                                 if(currentMediaPlayerHolder != null && currentMediaPlayerHolder.equals(holder)){
                                     stopSong();
                                 }
-                                AppDatabase appDatabase = DatabaseFactory.getAppDatabase(view.getContext());
+                                AppDatabase appDatabase = DatabaseSingleton.getAppDatabase(view.getContext());
                                 UserPostDao userPostDao = appDatabase.userPostDao();
                                 userPostDao.deletePost(post);
                                 posts.remove(holder.getAdapterPosition());

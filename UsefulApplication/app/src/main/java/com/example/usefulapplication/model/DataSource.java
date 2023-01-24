@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.example.usefulapplication.dao.UserPostDao;
 import com.example.usefulapplication.database.AppDatabase;
-import com.example.usefulapplication.database.DatabaseFactory;
+import com.example.usefulapplication.database.DatabaseSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class DataSource {
     private static DataSource dataSource;
 
     private DataSource(Context context) {
-        this.appDatabase = DatabaseFactory.getAppDatabase(context);
+        this.appDatabase = DatabaseSingleton.getAppDatabase(context);
         this.userPostDao = appDatabase.userPostDao();
         this.data = new ArrayList<>();
 
